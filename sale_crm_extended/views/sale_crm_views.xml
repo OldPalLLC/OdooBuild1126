@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="sale_crm.sale_action_quotations_new" model="ir.actions.act_window">
+		<field name="context">{'search_default_opportunity_id': active_id, 'default_opportunity_id': active_id, 'hide_confirm': True}</field>
+	</record>
+    <record id="action_crm_quotations" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{'search_default_my_quotation': 1, 'hide_confirm': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+          </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+          </p>
+        </field>
+    </record>
+    <record id="sale_order_form_inherit_sale_crm_extended" model="ir.ui.view">
+    	<field name="name">sale.order.form.inherit.sale_crm_extended</field>
+    	<field name="model">sale.order</field>
+    	<field name="inherit_id" ref="sale.view_order_form"/>
+    	<field name="arch" type="xml">
+    		<xpath expr="//button[@name='action_confirm'][1]" position="attributes">
+    			<attribute name="invisible">context.get('hide_confirm')</attribute>
+    		</xpath>
+    		<xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+    			<attribute name="invisible">context.get('hide_confirm')</attribute>
+    		</xpath>
+    	</field>
+    </record>
+    <menuitem
+        id="sale_crm.sale_order_menu_quotations_crm"
+        action="sale_crm_extended.action_crm_quotations"
+        name="My Quotations"
+        parent="crm.crm_menu_sales"
+        sequence="2"/>
+</odoo>

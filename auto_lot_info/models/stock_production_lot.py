@@ -19,6 +19,22 @@ class StockProductionLot(models.Model):
         ondelete='cascade'
     )
 
+    sub_lots = fields.One2many(
+        string='Sub Lots',
+        comodel_name='stock.production.lot',
+        inverse_name='produced_form',
+        ondelete='cascade'
+    )
+
+    @api.constrains('lab_name', 'thc_percent', 'cbd_percent', 'test_results', 'produced_form')
+    def _constrain_auto_lot_info_fields(self):
+        for s in self:
+            for sl in s.sub_lots:
+                sl['lab_name'] = s['lab_name']
+                sl['thc_percent'] = s['thc_percent']
+                sl['cbd_percent'] = s['cbd_percent']
+                sl['test_results'] = s['test_results']
+
     @api.depends('produced_form')
     def _onchange_produced_form(self):
         for s in self:

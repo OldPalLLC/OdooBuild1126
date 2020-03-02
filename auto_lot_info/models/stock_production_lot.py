@@ -18,3 +18,13 @@ class StockProductionLot(models.Model):
         comodel_name='stock.production.lot',
         ondelete='cascade'
     )
+
+    @api.depends('produced_form')
+    def _onchange_produced_form(self):
+        for s in self:
+            if s['produced_form']:
+                produced_form = s['produced_form']
+                s['lab_name'] = produced_form['lab_name']
+                s['thc_percent'] = produced_form['thc_percent']
+                s['cbd_percent'] = produced_form['cbd_percent']
+                s['test_results'] = produced_form['test_results']

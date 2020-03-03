@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': "Stock Production Lot Extended",
-    'version': '1.0',
+    'name': "auto_lot_info",
+    'version': '1.1',
     'depends': ['mrp'],
+    'license': 'LGPL-3',
     'author': 'Odoo Inc',
     'maintainer': 'Odoo Inc',
     'category': 'Manufacturing',

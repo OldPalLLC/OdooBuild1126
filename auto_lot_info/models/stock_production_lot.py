@@ -35,7 +35,7 @@ class StockProductionLot(models.Model):
                 sl['cbd_percent'] = s['cbd_percent']
                 sl['test_results'] = s['test_results']
 
-    @api.depends('produced_form')
+    @api.onchange('produced_form')
     def _onchange_produced_form(self):
         for s in self:
             if s['produced_form']:
@@ -44,3 +44,8 @@ class StockProductionLot(models.Model):
                 s['thc_percent'] = produced_form['thc_percent']
                 s['cbd_percent'] = produced_form['cbd_percent']
                 s['test_results'] = produced_form['test_results']
+            else:
+                s['lab_name'] = ''
+                s['thc_percent'] = 0.0
+                s['cbd_percent'] = 0.0
+                s['test_results'] = ''

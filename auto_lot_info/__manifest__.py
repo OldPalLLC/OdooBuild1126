@@ -36,7 +36,6 @@ TASK ID: 2194700
     """,
     # data files always loaded at installation
     'data': [
-        'views/stock_production_lot.xml',
-        'data/base_automation.xml'
+        'views/stock_production_lot.xml'
     ],
 }

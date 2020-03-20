@@ -2,7 +2,7 @@
 from odoo import api, fields, models
 
 class StockProductionLot(models.Model):
-    _inherit = "stock.production.lot"
+    _inherit = 'stock.production.lot'
 
     lab_name = fields.Text(string='Lab Name')
     thc_percent = fields.Float(string='THC%', digits=(3,2))

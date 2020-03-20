@@ -17,6 +17,7 @@ class MrpProductProduce(models.TransientModel):
                     lot2 = m['lot_id']
                     if lot2:
                         _logger.info("lot2: {}".format(lot2['name']))
-                        lot1[0]['produced_from'] = lot2[0]
+                        lot1['produced_from'] = lot2
+                        lot1._change_produced_from()
         
         return super(MrpProductProduce, self).do_produce()

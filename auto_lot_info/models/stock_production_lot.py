@@ -13,8 +13,8 @@ class StockProductionLot(models.Model):
         selection=[('pass', 'Pass'), ('fail', 'Fail')]
     )
 
-    produced_form = fields.Many2one(
-        string='Produced Form',
+    produced_from = fields.Many2one(
+        string='Produced From',
         comodel_name='stock.production.lot',
         ondelete='cascade'
     )
@@ -22,11 +22,11 @@ class StockProductionLot(models.Model):
     sub_lots = fields.One2many(
         string='Sub Lots',
         comodel_name='stock.production.lot',
-        inverse_name='produced_form',
+        inverse_name='produced_from',
         ondelete='cascade'
     )
 
-    @api.constrains('lab_name', 'thc_percent', 'cbd_percent', 'test_results', 'produced_form')
+    @api.constrains('lab_name', 'thc_percent', 'cbd_percent', 'test_results')
     def _constrain_auto_lot_info_fields(self):
         for s in self:
             for sl in s.sub_lots:
@@ -35,17 +35,24 @@ class StockProductionLot(models.Model):
                 sl['cbd_percent'] = s['cbd_percent']
                 sl['test_results'] = s['test_results']
 
-    @api.onchange('produced_form')
-    def _onchange_produced_form(self):
+    def _change_produced_from(self):
         for s in self:
-            if s['produced_form']:
-                produced_form = s['produced_form']
-                s['lab_name'] = produced_form['lab_name']
-                s['thc_percent'] = produced_form['thc_percent']
-                s['cbd_percent'] = produced_form['cbd_percent']
-                s['test_results'] = produced_form['test_results']
+            if s['produced_from']:
+                produced_from = s['produced_from']
+                s['lab_name'] = produced_from['lab_name']
+                s['thc_percent'] = produced_from['thc_percent']
+                s['cbd_percent'] = produced_from['cbd_percent']
+                s['test_results'] = produced_from['test_results']
             else:
                 s['lab_name'] = ''
                 s['thc_percent'] = 0.0
                 s['cbd_percent'] = 0.0
                 s['test_results'] = ''
+    
+    @api.constrains('produced_from')
+    def _constrain_produced_from(self):
+        self._change_produced_from()
+
+    @api.onchange('produced_from')
+    def _onchange_produced_from(self):
+        self._change_produced_from()

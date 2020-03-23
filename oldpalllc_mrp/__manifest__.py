@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': "auto_lot_info",
-    'version': '1.1',
+    'name': "oldpalllc_mrp",
+    'version': '1.0',
     'depends': ['mrp'],
     'license': 'LGPL-3',
     'author': 'Odoo Inc',

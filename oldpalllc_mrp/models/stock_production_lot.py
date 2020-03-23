@@ -13,13 +13,13 @@ class StockProductionLot(models.Model):
         selection=[('pass', 'Pass'), ('fail', 'Fail')]
     )
 
-    produced_from = fields.Many2one(
+    produced_from_id = fields.Many2one(
         string='Produced From',
         comodel_name='stock.production.lot',
         ondelete='cascade'
     )
 
-    sub_lots = fields.One2many(
+    sub_lot_ids = fields.One2many(
         string='Sub Lots',
         comodel_name='stock.production.lot',
         inverse_name='produced_from',
@@ -29,7 +29,7 @@ class StockProductionLot(models.Model):
     @api.constrains('lab_name', 'thc_percent', 'cbd_percent', 'test_results')
     def _constrain_auto_lot_info_fields(self):
         for s in self:
-            for sl in s.sub_lots:
+            for sl in s.sub_lot_ids:
                 sl['lab_name'] = s['lab_name']
                 sl['thc_percent'] = s['thc_percent']
                 sl['cbd_percent'] = s['cbd_percent']
@@ -37,8 +37,8 @@ class StockProductionLot(models.Model):
 
     def _change_produced_from(self):
         for s in self:
-            if s['produced_from']:
-                produced_from = s['produced_from']
+            if s['produced_from_id']:
+                produced_from = s['produced_from_id']
                 s['lab_name'] = produced_from['lab_name']
                 s['thc_percent'] = produced_from['thc_percent']
                 s['cbd_percent'] = produced_from['cbd_percent']
@@ -49,10 +49,10 @@ class StockProductionLot(models.Model):
                 s['cbd_percent'] = 0.0
                 s['test_results'] = ''
     
-    @api.constrains('produced_from')
+    @api.constrains('produced_from_id')
     def _constrain_produced_from(self):
         self._change_produced_from()
 
-    @api.onchange('produced_from')
+    @api.onchange('produced_from_id')
     def _onchange_produced_from(self):
         self._change_produced_from()

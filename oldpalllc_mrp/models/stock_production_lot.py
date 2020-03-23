@@ -22,7 +22,7 @@ class StockProductionLot(models.Model):
     sub_lot_ids = fields.One2many(
         string='Sub Lots',
         comodel_name='stock.production.lot',
-        inverse_name='produced_from',
+        inverse_name='produced_from_id',
         ondelete='cascade'
     )
 

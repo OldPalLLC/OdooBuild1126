@@ -7,6 +7,7 @@ class StockProductionLot(models.Model):
     lab_name = fields.Text(string='Lab Name')
     thc_percent = fields.Float(string='THC%', digits=(3,2))
     cbd_percent = fields.Float(string='CBD%', digits=(3,2))
+    production_id = fields.Many2one(string='Manufacturing Order', comodel_name='mrp.production', ondelete='cascade')
     
     test_results = fields.Selection(
         string='Test Results',
@@ -30,10 +31,11 @@ class StockProductionLot(models.Model):
     def _constrain_auto_lot_info_fields(self):
         for s in self:
             for sl in s.sub_lot_ids:
-                sl['lab_name'] = s['lab_name']
-                sl['thc_percent'] = s['thc_percent']
-                sl['cbd_percent'] = s['cbd_percent']
-                sl['test_results'] = s['test_results']
+                if s.production_id and s.production_id.mo_category != 'testing':
+                    sl['lab_name'] = s['lab_name']
+                    sl['thc_percent'] = s['thc_percent']
+                    sl['cbd_percent'] = s['cbd_percent']
+                    sl['test_results'] = s['test_results']
 
     def _change_produced_from(self):
         for s in self:
@@ -51,8 +53,12 @@ class StockProductionLot(models.Model):
     
     @api.constrains('produced_from_id')
     def _constrain_produced_from(self):
-        self._change_produced_from()
+        for s in self:
+            if s.production_id and s.production_id.mo_category != 'testing':
+                s._change_produced_from()
 
     @api.onchange('produced_from_id')
     def _onchange_produced_from(self):
-        self._change_produced_from()
+        for s in self:
+            if s.production_id and s.production_id.mo_category != 'testing':
+                s._change_produced_from()
